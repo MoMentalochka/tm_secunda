@@ -1,0 +1,25 @@
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+shared/pkg
+shared/api/bundles
+bin
+# Test binary, built with `go test -c`
+*.test
+
+# Code coverage profiles and other test artifacts
+*.out
+coverage.*
+mocks
+*.coverprofile
+profile.cov
+
+# Go workspace file
+
+# env file
+.env
+.idea
+node_modules

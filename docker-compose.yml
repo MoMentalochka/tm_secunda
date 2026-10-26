@@ -1,0 +1,47 @@
+services:
+  tm_db_mysql:
+    image: mysql:${MYSQL_IMAGE_TAG}
+    container_name: tm_db
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${MYSQL_EXT_PORT}:3306"
+    volumes:
+      - tm_mysql_data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "${MYSQL_HOST}", "-u$$MYSQL_USER", "-p$$MYSQL_PASSWORD"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  tm_migrator:
+    image: migrate/migrate
+    container_name: go_migrator
+    volumes:
+      # Пробрасываем локальную папку с .sql файлами внутрь контейнера
+      - ./migrations:/migrations
+    # Команда запускает миграции из папки /migrations используя DSN из .env
+    command: -path=/migrations -database "${MYSQL_MIGRATION_PATH}" up
+    depends_on:
+      tm_db_mysql:
+        condition: service_healthy # Ждет, пока MySQL полностью запустится
+
+  tm_cache_redis:
+    image: redis:7.0-alpine
+    container_name: tm_cache
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - tm_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  tm_mysql_data:
+  tm_redis_data:
