@@ -18,6 +18,7 @@ mocks
 profile.cov
 
 # Go workspace file
+package*
 
 # env file
 .env

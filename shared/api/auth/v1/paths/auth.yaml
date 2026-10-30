@@ -1,0 +1,70 @@
+register:
+  post:
+    summary: Регистрация нового пользователя
+    operationId: registerUser
+    tags:
+      - Auth
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/auth.yaml#/RegisterRequest'
+    responses:
+      '201':
+        description: Пользователь успешно зарегистрирован
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/auth.yaml#/UserResponse'
+      '400':
+        description: Некорректные входные данные
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/common.yaml#/ErrorResponse'
+      '409':
+        description: Пользователь с таким email уже существует
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/common.yaml#/ErrorResponse'
+      default:
+        description: default
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/common.yaml#/ErrorResponse'
+
+login:
+  post:
+    summary: Аутентификация пользователя и выдача JWT
+    operationId: loginUser
+    tags:
+      - Auth
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/auth.yaml#/LoginRequest'
+    responses:
+      '200':
+        description: Успешный вход, токен выпущен
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/auth.yaml#/LoginResponse'
+      '401':
+        description: Неверный email или пароль
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/common.yaml#/ErrorResponse'
+      default:
+        description: default
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/common.yaml#/ErrorResponse'
+

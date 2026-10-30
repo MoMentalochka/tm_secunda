@@ -13,6 +13,11 @@
 
 ## Запуск проекта
 
+### Генерация с open api
+```bash
+go generate
+```
+
 ### Поднять сервис в docker контейнере
 ```bash
 docker-compose up
