@@ -1,0 +1,68 @@
+openapi: 3.0.3
+info:
+  title: Task Management Service API
+  description: REST API сервис для управления задачами внутри команд с ролевой моделью.
+  version: 1.0.0
+servers:
+  - url: /api/v1
+    description: Локальный сервер разработки
+
+paths:
+  /register:
+    $ref: './paths/auth.yaml#/register'
+  /login:
+    $ref: './paths/auth.yaml#/login'
+  /teams:
+    $ref: './paths/team.yaml#/teams'
+  /teams/{id}/invite:
+    $ref: './paths/team.yaml#/teamInvite'
+  /tasks:
+    $ref: './paths/task.yaml#/tasks'
+  /tasks/{id}:
+    $ref: './paths/task.yaml#/taskById'
+  /tasks/{id}/history:
+    $ref: './paths/task.yaml#/taskHistory'
+  /tasks/{id}/comments:
+    $ref: './paths/task.yaml#/taskComments'
+  /teams/{team_id}/stats:
+    $ref: './paths/task.yaml#/teamStats'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      $ref: './components/security.yaml#/BearerAuth'
+  schemas:
+    RegisterRequest:
+      $ref: './components/schemas/auth.yaml#/RegisterRequest'
+    LoginRequest:
+      $ref: './components/schemas/auth.yaml#/LoginRequest'
+    LoginResponse:
+      $ref: './components/schemas/auth.yaml#/LoginResponse'
+    UserResponse:
+      $ref: './components/schemas/auth.yaml#/UserResponse'
+
+    CreateTeamRequest:
+      $ref: './components/schemas/team.yaml#/CreateTeamRequest'
+    TeamResponse:
+      $ref: './components/schemas/team.yaml#/TeamResponse'
+    InviteUserRequest:
+      $ref: './components/schemas/team.yaml#/InviteUserRequest'
+
+    # Схемы Задач и Отчетов
+    CreateTaskRequest:
+      $ref: './components/schemas/task.yaml#/CreateTaskRequest'
+    UpdateTaskRequest:
+      $ref: './components/schemas/task.yaml#/UpdateTaskRequest'
+    TaskResponse:
+      $ref: './components/schemas/task.yaml#/TaskResponse'
+    HistoryResponse:
+      $ref: './components/schemas/task.yaml#/HistoryResponse'
+    CommentRequest:
+      $ref: './components/schemas/task.yaml#/CommentRequest'
+    CommentResponse:
+      $ref: './components/schemas/task.yaml#/CommentResponse'
+    StatsResponse:
+      $ref: './components/schemas/task.yaml#/StatsResponse'
+
+    ErrorResponse:
+      $ref: './components/schemas/common.yaml#/ErrorResponse'

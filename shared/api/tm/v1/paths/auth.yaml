@@ -29,12 +29,6 @@ register:
           application/json:
             schema:
               $ref: '../components/schemas/common.yaml#/ErrorResponse'
-      default:
-        description: default
-        content:
-          application/json:
-            schema:
-              $ref: '../components/schemas/common.yaml#/ErrorResponse'
 
 login:
   post:
@@ -61,10 +55,3 @@ login:
           application/json:
             schema:
               $ref: '../components/schemas/common.yaml#/ErrorResponse'
-      default:
-        description: default
-        content:
-          application/json:
-            schema:
-              $ref: '../components/schemas/common.yaml#/ErrorResponse'
-

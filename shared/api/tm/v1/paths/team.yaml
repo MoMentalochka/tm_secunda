@@ -1,0 +1,96 @@
+teams:
+  post:
+    summary: Создание новой команды
+    description: Текущий пользователь автоматически становится создателем (owner) команды.
+    operationId: createTeam
+    tags:
+      - Teams
+    security:
+      - BearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/team.yaml#/CreateTeamRequest'
+    responses:
+      '211':
+        description: Команда успешно создана
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/team.yaml#/TeamResponse'
+      '401':
+        description: Не авторизован
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/common.yaml#/ErrorResponse'
+
+  get:
+    summary: Получение списка команд текущего пользователя
+    description: Возвращает команды, в которых пользователь является участником, администратором или создателем.
+    operationId: getTeams
+    tags:
+      - Teams
+    security:
+      - BearerAuth: []
+    responses:
+      '200':
+        description: Список команд
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../components/schemas/team.yaml#/TeamResponse'
+      '401':
+        description: Не авторизован
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/common.yaml#/ErrorResponse'
+
+teamInvite:
+  post:
+    summary: Добавление пользователя в команду
+    description: Доступно только создателю (owner) или администратору (admin) команды.
+    operationId: inviteToTeam
+    tags:
+      - Teams
+    security:
+      - BearerAuth: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID команды
+        schema:
+          type: integer
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/team.yaml#/InviteUserRequest'
+    responses:
+      '200':
+        description: Пользователь успешно добавлен в команду
+      '400':
+        description: Некорректные данные запроса
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/common.yaml#/ErrorResponse'
+      '401':
+        description: Не авторизован
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/common.yaml#/ErrorResponse'
+      '403':
+        description: Недостаточно прав для приглашения пользователей
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/common.yaml#/ErrorResponse'

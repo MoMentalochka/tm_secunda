@@ -1,0 +1,171 @@
+CreateTaskRequest:
+  type: object
+  required:
+    - team_id
+    - title
+  properties:
+    team_id:
+      type: integer
+      example: 1
+    title:
+      type: string
+      example: "Реализовать кэширование"
+    description:
+      type: string
+      example: "Настроить Redis для GET /tasks"
+    assignee_id:
+      type: integer
+      nullable: true
+      example: 5
+
+UpdateTaskRequest:
+  type: object
+  required:
+    - title
+    - status
+    - version
+  properties:
+    title:
+      type: string
+      example: "Реализовать кэширование в Redis"
+    description:
+      type: string
+      example: "Обновленное описание"
+    status:
+      type: string
+      enum: [todo, in_progress, review, done]
+      example: "in_progress"
+    assignee_id:
+      type: integer
+      nullable: true
+      example: 5
+    version:
+      type: integer
+      description: Текущая версия задачи на клиенте для Optimistic Locking
+      example: 1
+
+TaskResponse:
+  type: object
+  properties:
+    id:
+      type: integer
+      example: 10
+    team_id:
+      type: integer
+      example: 1
+    title:
+      type: string
+      example: "Реализовать кэширование"
+    description:
+      type: string
+      example: "Настроить Redis для GET /tasks"
+    status:
+      type: string
+      example: "todo"
+    created_by:
+      type: integer
+      example: 2
+    assignee_id:
+      type: integer
+      nullable: true
+      example: 5
+    version:
+      type: integer
+      example: 1
+    created_at:
+      type: string
+      format: date-time
+    updated_at:
+      type: string
+      format: date-time
+    closed_at:
+      type: string
+      format: date-time
+      nullable: true
+
+HistoryResponse:
+  type: object
+  properties:
+    id:
+      type: integer
+      example: 1
+    task_id:
+      type: integer
+      example: 10
+    changed_by:
+      type: integer
+      example: 2
+    changes:
+      type: object
+      description: Карта изменений полей задачи
+      additionalProperties:
+        type: object
+        properties:
+          old:
+            type: string
+          new:
+            type: string
+      example:
+        status:
+          old: "todo"
+          new: "in_progress"
+    created_at:
+      type: string
+      format: date-time
+
+CommentRequest:
+  type: object
+  required:
+    - content
+  properties:
+    content:
+      type: string
+      example: "Задача заблокирована до реализации миграций"
+
+CommentResponse:
+  type: object
+  properties:
+    id:
+      type: integer
+      example: 100
+    task_id:
+      type: integer
+      example: 10
+    user_id:
+      type: integer
+      example: 5
+    content:
+      type: string
+      example: "Задача заблокирована до реализации миграций"
+    created_at:
+      type: string
+      format: date-time
+
+StatsResponse:
+  type: object
+  properties:
+    statuses:
+      type: object
+      additionalProperties:
+        type: integer
+      example: { "todo": 5, "in_progress": 2, "done": 12 }
+    top_assignees:
+      type: array
+      items:
+        type: object
+        properties:
+          user_id:
+            type: integer
+          name:
+            type: string
+          closed_count:
+            type: integer
+      example:
+        - { user_id: 5, name: "Петр", closed_count: 8 }
+    avg_close_time_seconds:
+      type: number
+      nullable: true
+      example: 86400
+    total_comments:
+      type: integer
+      example: 34

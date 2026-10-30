@@ -1,0 +1,205 @@
+tasks:
+  post:
+    summary: Создание задачи в команде
+    operationId: createTask
+    tags:
+      - Tasks
+    security:
+      - BearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/task.yaml#/CreateTaskRequest'
+    responses:
+      '201':
+        description: Задача успешно создана
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/task.yaml#/TaskResponse'
+      '403':
+        description: Доступ запрещен (не участник команды)
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/common.yaml#/ErrorResponse'
+
+  get:
+    summary: Список задач команды с фильтрами и пагинацией
+    operationId: getTasks
+    tags:
+      - Tasks
+    security:
+      - BearerAuth: []
+    parameters:
+      - name: team_id
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [todo, in_progress, review, done]
+      - name: assignee_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 20
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+    responses:
+      '200':
+        description: Список задач (кэшируется в Redis)
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../components/schemas/task.yaml#/TaskResponse'
+
+taskById:
+  put:
+    summary: Обновление задачи с проверкой прав, версионированием и историей
+    operationId: updateTask
+    tags:
+      - Tasks
+    security:
+      - BearerAuth: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/task.yaml#/UpdateTaskRequest'
+    responses:
+      '200':
+        description: Задача успешно обновлена
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/task.yaml#/TaskResponse'
+      '409':
+        description: Конкурентное изменение (Conflict / Не совпала version)
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/common.yaml#/ErrorResponse'
+
+taskHistory:
+  get:
+    summary: История изменений задачи
+    operationId: getTaskHistory
+    tags:
+      - Tasks
+    security:
+      - BearerAuth: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    responses:
+      '200':
+        description: История изменений задачи
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../components/schemas/task.yaml#/HistoryResponse'
+
+taskComments:
+  post:
+    summary: Добавление комментария к задаче
+    operationId: addTaskComment
+    tags:
+      - Comments
+    security:
+      - BearerAuth: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/task.yaml#/CommentRequest'
+    responses:
+      '201':
+        description: Комментарий добавлен
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/task.yaml#/CommentResponse'
+
+  get:
+    summary: Список комментариев задачи
+    operationId: getTaskComments
+    tags:
+      - Comments
+    security:
+      - BearerAuth: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    responses:
+      '200':
+        description: Список комментариев
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../components/schemas/task.yaml#/CommentResponse'
+
+teamStats:
+  get:
+    summary: SQL-отчет по конкретной команде
+    description: Доступен только создателю или администратору команды.
+    operationId: getTeamStats
+    tags:
+      - Analytics
+    security:
+      - BearerAuth: []
+    parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: integer
+    responses:
+      '200':
+        description: Комплексная статистика по команде
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/task.yaml#/StatsResponse'

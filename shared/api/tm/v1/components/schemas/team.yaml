@@ -1,0 +1,40 @@
+CreateTeamRequest:
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      minLength: 2
+      example: "Backend Team"
+
+TeamResponse:
+  type: object
+  properties:
+    id:
+      type: integer
+      example: 1
+    name:
+      type: string
+      example: "Backend Team"
+    created_by:
+      type: integer
+      example: 42
+    created_at:
+      type: string
+      format: date-time
+      example: "2026-10-30T12:00:00Z"
+
+InviteUserRequest:
+  type: object
+  required:
+    - user_id
+    - role
+  properties:
+    user_id:
+      type: integer
+      example: 5
+    role:
+      type: string
+      enum: [admin, member]
+      example: "member"
