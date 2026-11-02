@@ -8,23 +8,23 @@ servers:
     description: Локальный сервер разработки
 
 paths:
-  /register:
+  /api/v1/register:
     $ref: './paths/auth.yaml#/register'
-  /login:
+  /api/v1/login:
     $ref: './paths/auth.yaml#/login'
-  /teams:
+  /api/v1/teams:
     $ref: './paths/team.yaml#/teams'
-  /teams/{id}/invite:
+  /api/v1/teams/{id}/invite:
     $ref: './paths/team.yaml#/teamInvite'
-  /tasks:
+  /api/v1/tasks:
     $ref: './paths/task.yaml#/tasks'
-  /tasks/{id}:
+  /api/v1/tasks/{id}:
     $ref: './paths/task.yaml#/taskById'
-  /tasks/{id}/history:
+  /api/v1/tasks/{id}/history:
     $ref: './paths/task.yaml#/taskHistory'
-  /tasks/{id}/comments:
+  /api/v1/tasks/{id}/comments:
     $ref: './paths/task.yaml#/taskComments'
-  /teams/{team_id}/stats:
+  /api/v1/teams/{team_id}/stats:
     $ref: './paths/task.yaml#/teamStats'
 
 components:

@@ -1,0 +1,22 @@
+{
+  "name": "secunda_tm",
+  "version": "1.0.0",
+  "description": "```\r .\r ├── cmd/\r │   └── main.go         # Точка входа\r ├── internal/\r ├── go.mod              # Зависимости Go-модуля\r └── .env                # Переменные окружения\r ```",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MoMentalochka/tm_secunda.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MoMentalochka/tm_secunda/issues"
+  },
+  "homepage": "https://github.com/MoMentalochka/tm_secunda#readme",
+  "dependencies": {
+    "@redocly/cli": "^2.72.1"
+  }
+}

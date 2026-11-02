@@ -36,6 +36,8 @@ LoginRequest:
 
 LoginResponse:
   type: object
+  required:
+    - token
   properties:
     token:
       type: string
@@ -43,6 +45,11 @@ LoginResponse:
 
 UserResponse:
   type: object
+  required:
+    - id
+    - email
+    - name
+    - created_at
   properties:
     id:
       type: integer
