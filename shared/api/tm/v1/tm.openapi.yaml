@@ -4,7 +4,7 @@ info:
   description: REST API сервис для управления задачами внутри команд с ролевой моделью.
   version: 1.0.0
 servers:
-  - url: /api/v1
+  - url: /
     description: Локальный сервер разработки
 
 paths:

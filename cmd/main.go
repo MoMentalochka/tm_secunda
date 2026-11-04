@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os/signal"
 	"syscall"
 	"task_manager/internal/app"
@@ -13,10 +14,11 @@ import (
 	"go.uber.org/zap"
 )
 
-const configPath = "../.env"
+const configPath = ".env"
 
 func main() {
 	if err := config.Load(configPath); err != nil {
+		fmt.Println(err)
 		logger.Error(context.Background(), "failed to load iam config: %v", zap.Error(err))
 		return
 	}

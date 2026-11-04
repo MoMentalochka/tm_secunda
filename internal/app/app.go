@@ -14,6 +14,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	httpSwagger "github.com/swaggo/http-swagger"
 	"go.uber.org/zap"
 )
 
@@ -55,7 +56,7 @@ func (a *App) initDI(_ context.Context) error {
 	return nil
 }
 
-func (a *App) initRouter(ctx context.Context) error {
+func (a *App) initRouter(_ context.Context) error {
 	r := chi.NewRouter()
 
 	// Добавляем middleware
@@ -65,6 +66,27 @@ func (a *App) initRouter(ctx context.Context) error {
 
 	// Монтируем обработчики OpenAPI
 	r.Mount("/", a.tmAPI)
+
+	// Создаём раздел под swagger и добавляем фс с нашей спецификацией
+	specPath := "./shared/api/bundles/openapi-bundle.yaml"
+
+	r.Get("/openapi.yaml", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, specPath)
+	})
+
+	r.Mount("/docs", func() http.Handler {
+		sr := chi.NewRouter()
+
+		sr.Get("/", func(w http.ResponseWriter, r *http.Request) {
+			http.Redirect(w, r, r.RequestURI+"/index.html", http.StatusMovedPermanently)
+		})
+
+		sr.Get("/*", httpSwagger.Handler(
+			httpSwagger.URL("/openapi.yaml"),
+		))
+		return sr
+	}())
+
 	a.router = r
 
 	return nil
